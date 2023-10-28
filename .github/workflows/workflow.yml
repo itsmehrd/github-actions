@@ -42,11 +42,12 @@ jobs:
         id: job-test-step-test
         run: npm run test
       - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
+        if: failure() && steps.job-test-step-test.outcome == 'failure' 
         id: job-test-step-save-test-report
         run: echo "TEST_REPORT=$(find test.json)" >> $GITHUB_OUTPUT
       - name: "Step: If test fails, then Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
       # One can use this name `uploaded-test-report` to access the test.json file in further jobs
-        if: failure() && steps.job-test-step-save-test-report == 'failure' && steps.job-test-step-test.outcome == 'failure'
+        if: failure() && steps.job-test-step-save-test-report == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: uploaded-test-report
