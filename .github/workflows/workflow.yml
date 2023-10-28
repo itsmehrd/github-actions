@@ -1,0 +1,44 @@
+name: "Workflow: Website Deployment"
+on:
+  push:
+    branches:
+      - master
+      - conditional-workflows
+jobs:
+  job__lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Clone code"
+      # Though caching of dependencies happens only after the installation, we need write the caching step prior to installation step
+      - name: "Step: Cache dependencies"
+      - name: "Step: Install dependencies"
+      - name: "Step: Lint code"
+
+  job__test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Clone code"
+      - name: "Step: Cache Dependencies"
+      - name: "Step: Install dependencies"
+      - name: "Step: Test code"
+      - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
+      - name: "Step: Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
+      # One can use this name `uploaded-test-report` to access the test.json file in further jobs
+
+  job__build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Clone code"
+      - name: "Step: Cache Dependencies"
+      - name: "Step: Install dependencies"
+      - name: "Step: Get the dynamically generated project folder name (i.e., `dist`) and store it into an OUTPUT VARIABLE called `PROJECT_NAME`"
+      - name: "Step: Upload the build artifacts present in the `dist` folder to a named `uploaded-build-artifacts` folder"
+      - name: "Step: collect the { build artifacts + package.json + package-lock.json } into a folder named 'FILE_COLLECTIONS' folder"
+
+  job__deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Download the artifacts from the `uploaded-build-artifacts` folder into a `downloaded-build-artifacts` folder"
+      - name: "Step: List out the contents in the `downloaded-build-artifacts` folder"
+      - name: "Step: Print the Project name which is stored as an output variable"
+      - name: "Step: Deploy"
