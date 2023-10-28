@@ -12,12 +12,14 @@ jobs:
         uses: actions/checkout@v3
       # Though caching of dependencies happens only after the installation, we need write the caching step prior to installation step
       - name: "Step: Cache dependencies"
-        id: "cache-deps"
+        id: "job-lint-step-cache-deps"
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # Cache local `node_modules` folder instead of ~/.npm folder for more speedy jobs
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: "Step: Install dependencies"
+        # Install dependencies if (cache-hit is false => cache is not already present)
+        if: steps.job-lint-step-cache-deps.outputs.cache-hit != true || steps.job-lint-step-cache-deps.outputs.cache-hit != 'true'
         run: npm ci
       - name: "Step: Lint code"
         run: npm run lint
@@ -30,12 +32,14 @@ jobs:
       - name: "Step: Clone code"
         uses: actions/checkout@v3
       - name: "Step: Cache Dependencies"
-        id: "cache-deps"
+        id: "job-test-step-cache-deps"
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # Cache local `node_modules` folder instead of ~/.npm folder for more speedy jobs
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: "Step: Install dependencies"
+        # Install dependencies if (cache-hit is false => cache is not already present)
+        if: steps.job-test-step-cache-deps.outputs.cache-hit != true || steps.job-test-step-cache-deps.outputs.cache-hit != 'true'
         run: npm ci
       - name: "Step: Test code"
         id: job-test-step-test
@@ -66,12 +70,14 @@ jobs:
       - name: "Step: Clone code"
         uses: actions/checkout@v3
       - name: "Step: Cache Dependencies"
-        id: "cache-deps"
+        id: "job-build-step-cache-deps"
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules # Cache local `node_modules` folder instead of ~/.npm folder for more speedy jobs 
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: "Step: Install dependencies"
+        # Install dependencies if (cache-hit is false => cache is not already present)
+        if: steps.job-build-step-cache-deps.outputs.cache-hit != true || steps.job-build-step-cache-deps.outputs.cache-hit != 'true'
         run: npm ci
       - name: "Step: Build code"
         run: npm run build
