@@ -23,7 +23,6 @@ jobs:
         run: npm run lint
 
   job__test:
-    needs: job__lint
     runs-on: ubuntu-latest
     outputs: 
       TEST_REPORT_OP: ${{ steps.job-test-step-save-test-report.outputs.TEST_REPORT }}
