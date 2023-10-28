@@ -1,0 +1,104 @@
+name: "Workflow: Website Deployment"
+on:
+  push:
+    branches:
+      - master
+      - conditional-workflows
+jobs:
+  job__lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Clone code"
+        uses: actions/checkout@v3
+      # Though caching of dependencies happens only after the installation, we need write the caching step prior to installation step
+      - name: "Step: Cache dependencies"
+        id: "cache-deps"
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: "Step: Install dependencies"
+        run: npm ci
+      - name: "Step: Lint code"
+        run: npm run lint
+
+  job__test:
+    needs: job__lint
+    runs-on: ubuntu-latest
+    outputs:
+      TEST_REPORT_OP: ${{ steps.job-test-step-save-test-report.outputs.TEST_REPORT }}
+    steps:
+      - name: "Step: Clone code"
+        uses: actions/checkout@v3
+      - name: "Step: Cache Dependencies"
+        id: "cache-deps"
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: "Step: Install dependencies"
+        run: npm ci
+      - name: "Step: Test code"
+        run: npm run test
+      - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
+        id: job-test-step-save-test-report
+        run: echo "TEST_REPORT=$(find test.json)" >> $GITHUB_OUTPUT
+      - name: "Step: Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
+        # One can use this name `uploaded-test-report` to access the test.json file in further jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: uploaded-test-report
+          path: test.json
+
+  job__build:
+    needs: job__test
+    runs-on: ubuntu-latest
+    outputs:
+      PROJECT_NAME_OP: ${{ steps.job-build-step-save-build-artifacts.outputs.PROJECT_NAME }}
+    steps:
+      - name: "Step: Clone code"
+        uses: actions/checkout@v3
+      - name: "Step: Cache Dependencies"
+        id: "cache-deps"
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: "Step: Install dependencies"
+        run: npm ci
+      - name: "Step: Build code"
+        run: npm run build
+      - name: "Step: Get the dynamically generated project folder name (i.e., `dist`) and store it into an OUTPUT VARIABLE called `PROJECT_NAME`"
+        id: job-build-step-save-build-artifacts
+        run: echo "PROJECT_NAME=$(find dist/* -type d -exec basename {} \;)" >> $GITHUB_OUTPUT
+      - name: "Step: Upload the build artifacts present in the `dist` folder to a named `uploaded-build-artifacts` folder"
+        uses: actions/upload-artifact@v3
+        with:
+          name: uploaded-build-artifacts
+          path: dist
+      - name: "Step: collect the { build artifacts + package.json + package-lock.json } into a folder named 'FILE_COLLECTIONS' folder"
+        uses: actions/upload-artifact@v3
+        with:
+          name: FILE_COLLECTIONS
+          path: |
+            dist
+            package.json
+            package-lock.json
+
+  job__deploy:
+    needs: job__build
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Download the artifacts from the `uploaded-build-artifacts` folder into a `downloaded-build-artifacts` folder"
+        uses: actions/download-artifact@v3
+        with:
+          name: uploaded-build-artifacts
+          path: downloaded-build-artifacts
+      - name: "Step: List out the contents in the `downloaded-build-artifacts` folder"
+        run: ls -R
+      - name: "Step: Print the Test report name which is stored as an output variable"
+        run: echo "${{ needs.job__test.outputs.TEST_REPORT_OP }}"
+      - name: "Step: Print the Project name which is stored as an output variable"
+        run: echo "${{ needs.job__build.outputs.PROJECT_NAME_OP }}"
+      - name: "Step: Deploy"
+        run: echo "Deploying... ... ..."
