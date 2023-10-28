@@ -39,12 +39,14 @@ jobs:
       - name: "Step: Install dependencies"
         run: npm ci
       - name: "Step: Test code"
+        id: job-test-step-test
         run: npm run test
       - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
         id: job-test-step-save-test-report
         run: echo "TEST_REPORT=$(find test.json)" >> $GITHUB_OUTPUT
-      - name: "Step: Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
+      - name: "Step: If test fails, then Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
       # One can use this name `uploaded-test-report` to access the test.json file in further jobs
+        if: ${{ steps.job-test-step-test.outcome == 'failure' }}
         uses: actions/upload-artifact@v3
         with:
           name: uploaded-test-report
