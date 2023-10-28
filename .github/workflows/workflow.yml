@@ -121,4 +121,4 @@ jobs:
       - name: "Step: Display info"
         run: |
           echo "Something went wrong"
-          echo "${{ github }}"
+          echo "${{ toJSON(github) }}"
