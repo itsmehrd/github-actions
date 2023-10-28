@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - conditional-workflows
+  workflow_dispatch:
 jobs:
   job__lint:
     runs-on: ubuntu-latest
