@@ -20,6 +20,7 @@ jobs:
       - name: "Step: Install dependencies"
         run: npm ci
       - name: "Step: Lint code"
+        run: npm run lint
 
   job__test:
     runs-on: ubuntu-latest
@@ -35,6 +36,7 @@ jobs:
       - name: "Step: Install dependencies"
         run: npm ci
       - name: "Step: Test code"
+        run: npm run test
       - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
       - name: "Step: Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
       # One can use this name `uploaded-test-report` to access the test.json file in further jobs
@@ -52,6 +54,8 @@ jobs:
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: "Step: Install dependencies"
         run: npm ci
+      - name: "Step: Build code"
+        run: npm run build
       - name: "Step: Get the dynamically generated project folder name (i.e., `dist`) and store it into an OUTPUT VARIABLE called `PROJECT_NAME`"
       - name: "Step: Upload the build artifacts present in the `dist` folder to a named `uploaded-build-artifacts` folder"
       - name: "Step: collect the { build artifacts + package.json + package-lock.json } into a folder named 'FILE_COLLECTIONS' folder"
