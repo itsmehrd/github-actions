@@ -90,6 +90,7 @@ jobs:
             package-lock.json
 
   job__deploy:
+    if: failure()
     needs: job__build
     runs-on: ubuntu-latest
     steps:
