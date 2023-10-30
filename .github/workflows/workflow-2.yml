@@ -62,7 +62,7 @@ jobs:
 
   job__build:
     # Even if any of the dependent jobs fail - execute this job
-    if: failure()
+    # if: failure()
     needs: job__test
     runs-on: ubuntu-latest
     outputs:
