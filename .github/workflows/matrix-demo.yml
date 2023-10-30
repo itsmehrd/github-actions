@@ -1,0 +1,13 @@
+name: "Matrix demo wrokflow"
+on:
+  push:
+    branches:
+      - matrices
+  workflow_dispatch:
+jobs:
+  job__hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: Say Hello world"
+        run: echo "Hello world"
+
