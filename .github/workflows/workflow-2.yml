@@ -43,26 +43,24 @@ jobs:
         if: steps.job-test-step-cache-deps.outputs.cache-hit != true || steps.job-test-step-cache-deps.outputs.cache-hit != 'true'
         run: npm ci
       - name: "Step: Test code"
+        #Even if this step fails execute the next steps
+        continue-on-error: true
         id: job-test-step-test
         run: npm run test
       - name: "Step: Save the `Test Report` into an OUTPUT VARIABLE called `TEST_REPORT`"
-        # Even if any of the steps in the job fail - execute this step 
-        # if: failure() 
         id: job-test-step-save-test-report
         run: echo "TEST_REPORT=$(find test.json)" >> $GITHUB_OUTPUT
       - name: "Step: If test fails, then Upload the Test Report` i.e., test.json file to a `uploaded-test-report` named folder"
       # One can use this name `uploaded-test-report` to access the test.json file in further jobs
 
-      # Even if any of the steps in the job fail - execute this step
-        # if: failure()
+        if: steps.job-test-step-test.outcome == 'failure'
+
         uses: actions/upload-artifact@v3
         with:
           name: uploaded-test-report
           path: test.json
 
   job__build:
-    # Even if any of the dependent jobs fail - execute this job
-    # if: failure()
     needs: job__test
     runs-on: ubuntu-latest
     outputs:
@@ -100,7 +98,6 @@ jobs:
             package-lock.json
 
   job__deploy:
-    # if: failure()
     needs: job__build
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +117,7 @@ jobs:
 
   job__display-info:
     # Even if any of the dependent jobs fail - execute this job
-    # if: failure()
+    if: failure()
     # but wait for every job from 'job__lint' to 'job__deploy' to get executed first.
     needs: [job__lint, job__deploy]
     runs-on: ubuntu-latest
