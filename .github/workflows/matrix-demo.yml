@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   job__build:
+    continue-on-error: true
     strategy:
       matrix:
         operating_systems: [ "ubuntu-latest", "windows-latest" ]
