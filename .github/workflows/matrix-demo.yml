@@ -10,9 +10,12 @@ jobs:
     strategy:
       matrix:
         operating_systems: [ "ubuntu-latest", "windows-latest" ]
-        node_versions: [ 12, 14, 16, 18]
+        node_versions: [ 12, 14, 16 ]
         exclude:
           - node_versions: 12
+        include:
+          - node_versions: [18, 20]
+            operating_systems: [ "ubuntu-latest" ]
     runs-on: ${{ matrix.operating_systems }}
     steps:
       - name: "Step: Get Code"
