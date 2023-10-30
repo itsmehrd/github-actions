@@ -14,7 +14,10 @@ jobs:
         exclude:
           - node_versions: 12
         include:
-          - node_versions: [18, 20]
+          # - node_versions: [18, 20] // this doesnt work
+          - node_versions: 18
+            operating_systems: "ubuntu-latest"
+          - node_versions: 20
             operating_systems: "ubuntu-latest"
     runs-on: ${{ matrix.operating_systems }}
     steps:
