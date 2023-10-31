@@ -1,8 +1,25 @@
 name: "Workflow: reusable"
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      organization:
+        description: "Name of the organization"
+        required: true
+        default: "CompanyX"
+        type: string
+      frontend-developer:
+        description: "Name of the Angular developer in the organization"
+        required: true
+        default: "FEDeveloperX"
+        type: string
+      backend-developer:
+        description: "Name of the Backend developer in the organization"
+        required: true
+        default: "BEDeveloperX"
+        type: string
 jobs:
   job__print-hello:
     runs-on: ubuntu-latest
     steps:
       - name: "Step: Say hello"
-        run: echo "Hello from reusable workflow"
+        run: echo "${{ inputs.frontend-developer }} is the worst Angular developer and ${{ inputs.backend-developer }} is the best .NET developer in the ${{ inputs.organization }} organization"

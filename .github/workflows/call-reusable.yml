@@ -6,3 +6,7 @@ on:
 jobs:
   job__print-hello:
     uses: ./.github/workflows/reusable.yml
+    with:
+      organization: "Exostar"
+      frontend-developer: "Harish"
+      backend-developer: "Rohith"
