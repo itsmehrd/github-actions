@@ -1,8 +1,8 @@
-name: "Workflow: reusable"
+name: "Action: reusable"
 on: workflow_call
 jobs:
   job__print-hello:
     runs-on: ubuntu-latest
     steps:
       - name: "Step: Say hello"
-        run: echo "Hello from reusable workflow"
+        run: echo "Hello from reusable action"
