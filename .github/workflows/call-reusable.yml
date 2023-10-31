@@ -1,0 +1,5 @@
+name: "Workflow: reusable"
+on: workflow_call
+jobs:
+  job__print-hello:
+    uses: ./.github/workflows/reusable.yml
