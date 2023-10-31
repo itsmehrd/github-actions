@@ -86,7 +86,7 @@ jobs:
             package-lock.json
 
   job__deploy:
-    needs: job__build
+    needs: [job__test, job__build]
     runs-on: ubuntu-latest
     steps:
       - name: "Step: Download the artifacts from the `uploaded-build-artifacts` folder into a `downloaded-build-artifacts` folder"
