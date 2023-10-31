@@ -24,4 +24,4 @@ jobs:
     steps:
       - name: "Step: add"
         id: job-add-step-add
-        run: echo "SUM=$( (${{ inputs.number01 }} + ${{ inputs.number02 }}) )" >> $GITHUB_OUTPUT
+        run: echo "SUM=$( ${{ inputs.number01 }} + ${{ inputs.number02 }} )" >> $GITHUB_OUTPUT
