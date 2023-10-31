@@ -1,0 +1,27 @@
+name: "Workflow: add two numbers"
+on:
+  workflow_call:
+    inputs:
+      number01:
+        description: "First number"
+        type: number
+        default: 0
+        required: true
+      number02:
+        description: "Second number"
+        type: number
+        default: 0
+        required: true
+    outputs:
+      result:
+        description: "Final result of the step"
+        value: ${{ jobs.job__add.outputs.SUM_OP }}
+jobs:
+  job__add:
+    outputs:
+      SUM_OP: ${{ steps.job-add-step-add.outputs.SUM }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: add"
+        id: job-add-step-add
+        run: echo "SUM=$( ($number01 + $number02) )" >> $GITHUB_OUTPUT

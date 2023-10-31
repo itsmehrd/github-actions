@@ -1,0 +1,17 @@
+name: "Workflow: perform addition"
+on:
+  push:
+    branches:
+      - reusable-workflows
+jobs:
+  job__perform-addition:
+    uses: ./.github/workflows/add.yml
+    with:
+      number01: 35
+      number02: 53
+  job__display_sum:
+    needs: job__perform-addition
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Step: print sum"
+        run: echo "${{needs.job__perform-addition.outputs.result}}"
