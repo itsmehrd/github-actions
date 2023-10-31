@@ -17,9 +17,14 @@ on:
         required: true
         default: "BEDeveloperX"
         type: string
+    secrets:
+      frontend-developer-salary:
+        required: true
+      backend-developer-salary:
+        required: false
 jobs:
   job__print-hello:
     runs-on: ubuntu-latest
     steps:
-      - name: "Step: Say hello"
+      - name: "Step: Print some information"
         run: echo "${{ inputs.frontend-developer }} is the worst Angular developer and ${{ inputs.backend-developer }} is the best .NET developer in the ${{ inputs.organization }} organization"
