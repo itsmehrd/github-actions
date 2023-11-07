@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "DB User: $MONGODB_USERNAME",
           echo "DB User: ${{ env.MONGODB_USERNAME }}",
-  deploy:
+  job__deploy:
     needs: job__test
     runs-on: ubuntu-latest
     steps:
@@ -45,5 +45,5 @@ jobs:
         run: |
           echo "DB (Available): $MONGODB_DB_NAME",
           echo "DB (Available): ${{ env.MONGODB_DB_NAME }}",
-          echo "DB User (Unvailable): $MONGODB_USERNAME",
-          echo "DB User (Unvailable): ${{ env.MONGODB_USERNAME }}",
+          echo "DB User (Unvailable): Out of the job scope ENV VAR Called: $MONGODB_USERNAME",
+          echo "DB User (Unvailable): Out of the job scope ENV VAR Called: ${{ env.MONGODB_USERNAME }}",
