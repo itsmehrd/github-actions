@@ -11,6 +11,8 @@ env: # WORKFLOW SPECEFIC ENV VARIABLES
 jobs:
   job__test:
     environment: "UAT"
+    container:
+      image: node:16
     env: # JOB SPECEFIC ENV VARIBALES
       MONGODB_CONNECTION_PROTOCOL: mongodb+srv
       MONGODB_CLUSTER_ADDRESS: "cluster0.4wifdch.mongodb.net"
